@@ -1,7 +1,20 @@
 @import "tailwindcss";
 
 :root {
---font-plus-jakarta: 'Plus Jakarta Sans', sans-serif;
+  --font-plus-jakarta: 'Plus Jakarta Sans', sans-serif;
 }
 
 
+@keyframes scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+
+.animate-scroll {
+  animation: scroll 20s linear infinite;
+}

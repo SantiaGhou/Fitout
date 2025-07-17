@@ -1,5 +1,6 @@
 import { Header } from "./components/Header";
 import { Hero } from "./components/Hero";
+import { Carousel } from "./components/Carrousel";
 
 
 export function LandingPage() {
@@ -7,6 +8,7 @@ export function LandingPage() {
     <div>
         <Header />
         <Hero />
+        <Carousel />
     </div>
   );
 }
