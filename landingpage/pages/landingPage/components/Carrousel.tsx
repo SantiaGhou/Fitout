@@ -18,7 +18,7 @@ export function Carousel() {
   const companies = [
     {
       name: 'OpenAI',
-      logo: 'https://www.svgrepo.com/show/306500/openai.svg',
+      logo: 'https://img.icons8.com/?size=100&id=FBO05Dys9QCg&format=png&color=FFFFFF',
     },
     {
       name: 'TypeScript',
@@ -30,11 +30,11 @@ export function Carousel() {
     },
     {
       name: 'Vercel',
-      logo: 'https://upload.wikimedia.org/wikipedia/commons/9/96/Vercel_logo.svg',
+      logo: 'https://registry.npmmirror.com/@lobehub/icons-static-png/latest/files/dark/vercel.png',
     },
     {
       name: 'Next.js',
-      logo: 'https://cdn.worldvectorlogo.com/logos/next-js.svg',
+      logo: 'https://cdn.brandfetch.io/id2alue-rx/w/394/h/80/theme/light/logo.png?c=1dxbfHSJFAPEGdCLU4o5B',
     },
     {
       name: 'Python',
