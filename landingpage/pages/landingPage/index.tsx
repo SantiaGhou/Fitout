@@ -2,6 +2,7 @@ import { Header } from "./components/Header";
 import { Hero } from "./components/Hero";
 import { Carousel } from "./components/Carrousel";
 import { HowItWorks } from "./components/HowItWorks";
+import { AISection } from "./components/AiSection";
 
 
 export function LandingPage() {
@@ -11,6 +12,7 @@ export function LandingPage() {
         <Hero />
         <Carousel />
         <HowItWorks />
+        <AISection />
     </div>
   );
 }
