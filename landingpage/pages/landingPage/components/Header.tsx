@@ -3,7 +3,7 @@ import Logo from "../../../public/assets/svg/Logo.svg";
 
 export function Header() {
   return (
-    <header className="flex justify-between items-center p-10 bg-[#0F0F10]/95 text-white">
+    <header className="fixed top-0 inset-x-0 z-50 flex justify-between items-center p-10 text-white bg-gradient-to-b from-[#0F0F10] to-transparent">
       <div>
         <Image src={Logo} alt="Logo" />
       </div>
@@ -45,9 +45,8 @@ export function Header() {
       </nav>
       <div>
         <button className="px-4 py-2 rounded-md bg-[#F74D00] hover:bg-[#F74D00] transition-all duration-200 transform hover:scale-105 hover:shadow-lg hover:shadow-[#F74D00]/40">
-        Entrar
+          Entrar
         </button>
-
       </div>
     </header>
   );
