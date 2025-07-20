@@ -1,0 +1,40 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model User {
+  id        String    @id @default(uuid())
+  email     String    @unique
+  password  String
+  type      String
+  name      String?
+  profile   Profile?  @relation(fields: [profileId], references: [id])
+  profileId String?   @unique
+  createdAt DateTime  @default(now())
+}
+
+model Profile {
+  id                  String   @id @default(uuid())
+  age                 Int
+  gender              String
+  bloodType           String
+  height              Float
+  weight              Float
+  hasTrainer          Boolean
+  objective           String
+  workoutType         String
+  frequency           Int
+  schedule            String
+  allergies           String?
+  avoidFoods          String?
+  dietType            String
+  intermittentFasting Boolean
+  streak              Int
+  workoutDays         Json
+  user                User?
+}
