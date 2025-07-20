@@ -23,7 +23,4 @@ dist-ssr
 *.sln
 *.sw?
 *.env
-venv
-**/__pycache__
-**/__init__.py
-*.pyc
+

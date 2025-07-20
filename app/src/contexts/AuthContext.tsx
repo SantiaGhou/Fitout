@@ -11,7 +11,7 @@ export const useAuth = () => {
   return context;
 };
 
-// Mock data for demonstration
+
 const mockUsers = [
   {
     id: '1',
