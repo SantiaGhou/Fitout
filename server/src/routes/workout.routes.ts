@@ -7,7 +7,7 @@ import { z } from 'zod';
 
 const router = Router();
 
-// All routes require authentication
+
 router.use(authenticateToken);
 
 const idParamSchema = z.object({
@@ -18,7 +18,7 @@ const userIdParamSchema = z.object({
   userId: z.string().cuid('Invalid user ID').optional()
 });
 
-// Workout CRUD routes
+
 router.post('/', validateBody(workoutSchema), WorkoutController.createWorkout);
 router.get('/user/:userId?', validateParams(userIdParamSchema), WorkoutController.getUserWorkouts);
 router.get('/:id', validateParams(idParamSchema), WorkoutController.getWorkout);

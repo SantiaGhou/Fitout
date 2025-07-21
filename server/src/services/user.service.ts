@@ -1,10 +1,10 @@
-import prisma from '@/config/database';
-import { createError } from '@/middlewares/errorHandler';
-import { UserProfileInput, PersonalProfileInput, UpdateUserInput } from '@/schemas/user.schemas';
+import prisma from '../config/database';
+import { createError } from '../middlewares/errorHandler';
+import { UserProfileInput, PersonalProfileInput, UpdateUserInput } from '../schemas/user.schemas';
 
 export class UserService {
   static async updateUserProfile(userId: string, data: UserProfileInput) {
-    // Check if user exists and is of type USER
+
     const user = await prisma.user.findUnique({
       where: { id: userId },
       include: { userProfile: true }
@@ -18,7 +18,7 @@ export class UserService {
       throw createError('Only regular users can have user profiles', 400);
     }
 
-    // Upsert user profile
+
     const profile = await prisma.userProfile.upsert({
       where: { userId },
       update: data,
@@ -32,7 +32,7 @@ export class UserService {
   }
 
   static async updatePersonalProfile(userId: string, data: PersonalProfileInput) {
-    // Check if user exists and is of type PERSONAL
+
     const user = await prisma.user.findUnique({
       where: { id: userId },
       include: { personalProfile: true }
@@ -46,7 +46,6 @@ export class UserService {
       throw createError('Only personal trainers can have personal profiles', 400);
     }
 
-    // Upsert personal profile
     const profile = await prisma.personalProfile.upsert({
       where: { userId },
       update: data,
@@ -121,7 +120,7 @@ export class UserService {
       throw createError('Personal trainer not found', 404);
     }
 
-    // Verify student exists and is a regular user
+
     const student = await prisma.user.findUnique({
       where: { id: studentId, type: 'USER' },
       include: { userProfile: true }
@@ -135,7 +134,7 @@ export class UserService {
       throw createError('Student already has a trainer', 400);
     }
 
-    // Create student relation
+
     const relation = await prisma.studentRelation.create({
       data: {
         personalId,
@@ -143,7 +142,7 @@ export class UserService {
       }
     });
 
-    // Update student's hasTrainer flag
+
     await prisma.userProfile.update({
       where: { userId: studentId },
       data: { hasTrainer: true }

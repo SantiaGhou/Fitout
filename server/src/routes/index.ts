@@ -5,12 +5,12 @@ import workoutRoutes from './workout.routes';
 
 const router = Router();
 
-// API routes
+
 router.use('/auth', authRoutes);
 router.use('/users', userRoutes);
 router.use('/workouts', workoutRoutes);
 
-// Health check
+
 router.get('/health', (req, res) => {
   res.json({ 
     status: 'OK', 

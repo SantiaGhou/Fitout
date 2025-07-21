@@ -8,7 +8,7 @@ const prisma = new PrismaClient({
 
 export default prisma;
 
-// Handle graceful shutdown
+
 process.on('beforeExit', async () => {
   await prisma.$disconnect();
 });

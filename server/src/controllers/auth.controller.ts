@@ -40,7 +40,7 @@ export class AuthController {
   }
 
   static async logout(req: Request, res: Response) {
-    // In a real app, you might want to blacklist the token
+    res.clearCookie('token');
     res.json({ message: 'Logout successful' });
   }
 }

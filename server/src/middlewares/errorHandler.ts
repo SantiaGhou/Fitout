@@ -15,7 +15,6 @@ export const errorHandler = (
   const statusCode = error.statusCode || 500;
   const message = error.message || 'Internal Server Error';
 
-  // Log error in development
   if (env.NODE_ENV === 'development') {
     console.error('Error:', error);
   }

@@ -1,10 +1,10 @@
-import prisma from '@/config/database';
-import { createError } from '@/middlewares/errorHandler';
-import { WorkoutInput, UpdateWorkoutInput } from '@/schemas/workout.schemas';
+import prisma from '../config/database';
+import { createError } from '../middlewares/errorHandler';
+import { WorkoutInput, UpdateWorkoutInput } from '../schemas/workout.schemas';
 
 export class WorkoutService {
   static async createWorkout(data: WorkoutInput, creatorId: string) {
-    // Verify user exists
+
     const user = await prisma.user.findUnique({
       where: { id: data.userId }
     });
@@ -13,7 +13,7 @@ export class WorkoutService {
       throw createError('User not found', 404);
     }
 
-    // Create workout with exercises
+   
     const workout = await prisma.workout.create({
       data: {
         name: data.name,
@@ -102,7 +102,6 @@ export class WorkoutService {
       data: {
         name: data.name,
         date: data.date ? new Date(data.date) : undefined,
-        completed: data.completed,
         exercises: data.exercises ? {
           deleteMany: {},
           create: data.exercises.map((exercise, index) => ({
