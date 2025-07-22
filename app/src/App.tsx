@@ -120,7 +120,7 @@ const AppContent: React.FC = () => {
         return <UserDashboard onNavigate={handleNavigate} />;
     }
   };
-  // User is authenticated and has completed onboarding
+
   return (
     <Layout currentPage={currentPage} onNavigate={handleNavigate}>
       {user.type === 'personal' ? renderPersonalContent() : renderUserContent()}
