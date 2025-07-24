@@ -1,16 +1,14 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Users, Search, Plus, TrendingUp, Award, Calendar } from 'lucide-react';
 import { Card } from '../ui/Card';
 import { Button } from '../ui/Button';
 import { Input } from '../ui/Input';
 import { useAuth } from '../../contexts/AuthContext';
 
-interface PersonalDashboardProps {
-  onNavigate?: (page: string) => void;
-}
-
-export const PersonalDashboard: React.FC<PersonalDashboardProps> = ({ onNavigate }) => {
+export const PersonalDashboard: React.FC = () => {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
 
   // Mock data for students
@@ -31,6 +29,10 @@ export const PersonalDashboard: React.FC<PersonalDashboardProps> = ({ onNavigate
     student.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  const handleNavigation = (route: string) => {
+    navigate(route);
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -42,7 +44,7 @@ export const PersonalDashboard: React.FC<PersonalDashboardProps> = ({ onNavigate
             Gerencie seus alunos e acompanhe o progresso
           </p>
         </div>
-        <Button onClick={() => onNavigate?.('students')}>
+        <Button onClick={() => handleNavigation('/students/add')}>
           <Plus className="h-4 w-4 mr-2" />
           Adicionar Aluno
         </Button>
@@ -75,39 +77,53 @@ export const PersonalDashboard: React.FC<PersonalDashboardProps> = ({ onNavigate
             </div>
             
             <div className="space-y-3">
-              {filteredStudents.map((student) => (
-                <Card key={student.id} variant="hover" className="p-4">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-3">
-                      <div className="w-10 h-10 bg-background-tertiary rounded-full flex items-center justify-center">
-                        <span className="text-content-primary font-medium">
-                          {student.name.split(' ').map(n => n[0]).join('')}
-                        </span>
+              {filteredStudents.length > 0 ? (
+                filteredStudents.map((student) => (
+                  <Card key={student.id} variant="hover" className="p-4 cursor-pointer" onClick={() => handleNavigation('/students')}>
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-3">
+                        <div className="w-10 h-10 bg-background-tertiary rounded-full flex items-center justify-center">
+                          <span className="text-content-primary font-medium">
+                            {student.name.split(' ').map(n => n[0]).join('')}
+                          </span>
+                        </div>
+                        <div>
+                          <h4 className="font-medium text-content-primary">{student.name}</h4>
+                          <p className="text-sm text-content-secondary">
+                            Sequência: {student.streak} dias
+                          </p>
+                        </div>
                       </div>
-                      <div>
-                        <h4 className="font-medium text-content-primary">{student.name}</h4>
-                        <p className="text-sm text-content-secondary">
-                          Sequência: {student.streak} dias
-                        </p>
+                      <div className="text-right">
+                        <div className="text-lg font-bold text-content-primary">
+                          {student.progress}%
+                        </div>
+                        <div className="text-sm text-content-secondary">progresso</div>
                       </div>
                     </div>
-                    <div className="text-right">
-                      <div className="text-lg font-bold text-content-primary">
-                        {student.progress}%
+                    <div className="mt-3">
+                      <div className="w-full bg-background-tertiary rounded-full h-2">
+                        <div 
+                          className="bg-accent-green h-2 rounded-full transition-all duration-300"
+                          style={{ width: `${student.progress}%` }}
+                        ></div>
                       </div>
-                      <div className="text-sm text-content-secondary">progresso</div>
                     </div>
-                  </div>
-                  <div className="mt-3">
-                    <div className="w-full bg-background-tertiary rounded-full h-2">
-                      <div 
-                        className="bg-accent-green h-2 rounded-full transition-all duration-300"
-                        style={{ width: `${student.progress}%` }}
-                      ></div>
-                    </div>
-                  </div>
-                </Card>
-              ))}
+                  </Card>
+                ))
+              ) : (
+                <div className="text-center py-8">
+                  <Users className="h-12 w-12 mx-auto mb-4 text-content-secondary" />
+                  <p className="text-content-secondary">Nenhum aluno encontrado</p>
+                  <Button 
+                    variant="outline" 
+                    className="mt-4"
+                    onClick={() => handleNavigation('/students/add')}
+                  >
+                    Adicionar primeiro aluno
+                  </Button>
+                </div>
+              )}
             </div>
           </Card>
         </div>
@@ -116,17 +132,29 @@ export const PersonalDashboard: React.FC<PersonalDashboardProps> = ({ onNavigate
           <Card>
             <h3 className="text-lg font-semibold text-content-primary mb-4">Ações Rápidas</h3>
             <div className="space-y-3">
-              <Button variant="outline" className="w-full justify-start" onClick={() => onNavigate?.('students')}>
+              <Button 
+                variant="outline" 
+                className="w-full justify-start" 
+                onClick={() => handleNavigation('/students')}
+              >
                 <Plus className="h-4 w-4 mr-2" />
-                Criar Treino
+                Gerenciar Alunos
               </Button>
-              <Button variant="outline" className="w-full justify-start" onClick={() => onNavigate?.('sessions')}>
+              <Button 
+                variant="outline" 
+                className="w-full justify-start" 
+                onClick={() => handleNavigation('/sessions')}
+              >
                 <Calendar className="h-4 w-4 mr-2" />
                 Agendar Sessão
               </Button>
-              <Button variant="outline" className="w-full justify-start" onClick={() => onNavigate?.('search')}>
+              <Button 
+                variant="outline" 
+                className="w-full justify-start" 
+                onClick={() => handleNavigation('/students')}
+              >
                 <Search className="h-4 w-4 mr-2" />
-                Buscar Usuários
+                Buscar Alunos
               </Button>
             </div>
           </Card>
