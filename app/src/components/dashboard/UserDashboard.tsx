@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Flame, Target, TrendingUp, Users, Calendar, Award } from 'lucide-react';
 import { Card } from '../ui/Card';
 import { Button } from '../ui/Button';
@@ -28,15 +29,17 @@ interface AuthContext {
   user: User | null;
 }
 
-interface UserDashboardProps {
-  onNavigate?: (page: string) => void;
-}
-
-export const UserDashboard: React.FC<UserDashboardProps> = ({ onNavigate }) => {
+export const UserDashboard: React.FC = () => {
   const { user } = useAuth() as AuthContext;
+  const navigate = useNavigate();
 
-  const streak = user?.profile?.streak || { current: 10, best: 1, lastWorkout: '', weekData: [] };
-  const workoutDays = user?.profile?.workoutDays?.length || 0;
+  const streak = user?.profile?.streak || { 
+    current: 10, 
+    best: 15, 
+    lastWorkout: new Date().toISOString().split('T')[0], 
+    weekData: [true, true, false, true, true, false, false] 
+  };
+  const workoutDays = user?.profile?.workoutDays?.length || 3;
 
   // Calculate IMC
   const calculateIMC = () => {
@@ -52,6 +55,10 @@ export const UserDashboard: React.FC<UserDashboardProps> = ({ onNavigate }) => {
     if (hour < 12) return 'Bom dia';
     if (hour < 18) return 'Boa tarde';
     return 'Boa noite';
+  };
+
+  const handleNavigation = (route: string) => {
+    navigate(route);
   };
 
   const stats = [
@@ -88,7 +95,6 @@ export const UserDashboard: React.FC<UserDashboardProps> = ({ onNavigate }) => {
   };
 
   return (
-    
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
@@ -99,14 +105,17 @@ export const UserDashboard: React.FC<UserDashboardProps> = ({ onNavigate }) => {
             Continue sua jornada fitness
           </p>
         </div>
+        <Button onClick={() => handleNavigation('/profile')}>
+          Ver Perfil
+        </Button>
       </div>
     
-          <Card className="bg-gradient-to-r from-black to-zinc-800 border-accent-green/30">
+      <Card className="bg-gradient-to-r from-black to-zinc-800 border-accent-green/30">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center space-x-3">
             <div className="p-3">
               <Flame className="text-[#F74D00]" size={24} />
-      </div>
+            </div>
             <div>
               <h3 className="text-xl font-bold text-content-primary">Ofensiva Atual</h3>
               <p className="text-content-secondary">Continue assim!</p>
@@ -119,7 +128,7 @@ export const UserDashboard: React.FC<UserDashboardProps> = ({ onNavigate }) => {
         </div>
 
         <div className="mb-4 radius-24 bg-gradient-to-r from-black to-zinc-800 p-4">
-          <div className="flex justify-betweentext-sm text-content-secondary mb-2">
+          <div className="flex justify-between text-sm text-content-secondary mb-2">
             <span>Esta semana</span>
             <span>Melhor: {streak.best} dias</span>
           </div>
@@ -138,7 +147,7 @@ export const UserDashboard: React.FC<UserDashboardProps> = ({ onNavigate }) => {
       </div>
 
       <div className="grid md:grid-cols-2 gap-6">
-        <Card variant="hover">
+        <Card variant="hover" className="cursor-pointer" onClick={() => handleNavigation('/workout')}>
           <div className="flex items-center space-x-3 mb-4">
             <Target className="h-6 w-6 text-accent-green" />
             <h3 className="text-lg font-semibold text-content-primary">Treino de Hoje</h3>
@@ -148,12 +157,15 @@ export const UserDashboard: React.FC<UserDashboardProps> = ({ onNavigate }) => {
               ? 'Musculação - Peito e Tríceps'
               : 'Nenhum treino programado para hoje'}
           </p>
-          <Button className="w-full" onClick={() => onNavigate?.('workout')}>
+          <Button className="w-full" onClick={(e) => {
+            e.stopPropagation();
+            handleNavigation('/workout');
+          }}>
             {user?.profile?.workoutType ? 'Iniciar Treino' : 'Criar Treino'}
           </Button>
         </Card>
 
-        <Card variant="hover">
+        <Card variant="hover" className="cursor-pointer" onClick={() => handleNavigation('/diet')}>
           <div className="flex items-center space-x-3 mb-4">
             <Calendar className="h-6 w-6 text-accent-blue" />
             <h3 className="text-lg font-semibold text-content-primary">Dieta de Hoje</h3>
@@ -161,7 +173,10 @@ export const UserDashboard: React.FC<UserDashboardProps> = ({ onNavigate }) => {
           <p className="text-content-secondary mb-4">
             Plano nutricional personalizado baseado no seu objetivo
           </p>
-          <Button variant="outline" className="w-full" onClick={() => onNavigate?.('diet')}>
+          <Button variant="outline" className="w-full" onClick={(e) => {
+            e.stopPropagation();
+            handleNavigation('/diet');
+          }}>
             Ver Dieta
           </Button>
         </Card>
@@ -178,7 +193,7 @@ export const UserDashboard: React.FC<UserDashboardProps> = ({ onNavigate }) => {
               <div className="w-8 text-content-secondary text-sm">{day}</div>
               <div className="flex-1 bg-background-tertiary rounded-full h-2">
                 <div
-                  className={`h-2 rounded-full ${
+                  className={`h-2 rounded-full transition-all duration-300 ${
                     index < workoutDays ? 'bg-accent-green' : 'bg-background-gray'
                   }`}
                   style={{ width: index < workoutDays ? '100%' : '0%' }}
@@ -192,7 +207,7 @@ export const UserDashboard: React.FC<UserDashboardProps> = ({ onNavigate }) => {
         </div>
       </Card>
 
-      <Card variant="hover">
+      <Card variant="hover" className="cursor-pointer" onClick={() => handleNavigation('/community')}>
         <div className="flex items-center space-x-3 mb-4">
           <Users className="h-6 w-6 text-accent-pink" />
           <h3 className="text-lg font-semibold text-content-primary">Comunidade</h3>
@@ -200,12 +215,13 @@ export const UserDashboard: React.FC<UserDashboardProps> = ({ onNavigate }) => {
         <p className="text-content-secondary mb-4">
           Conecte-se com outros atletas e personal trainers
         </p>
-        <Button variant="outline" className="w-full" onClick={() => onNavigate?.('community')}>
+        <Button variant="outline" className="w-full" onClick={(e) => {
+          e.stopPropagation();
+          handleNavigation('/community');
+        }}>
           Explorar Comunidade
         </Button>
       </Card>
-
-
     </div>
   );
 };

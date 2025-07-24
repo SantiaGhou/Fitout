@@ -49,6 +49,14 @@ export const UserOnboarding: React.FC = () => {
                 onChange={(e) => updateFormData({ age: parseInt(e.target.value) })}
                 placeholder="25"
               />
+              <Input
+                label="Nome"
+                type="text" 
+                value={formData.name || ''}
+                onChange={(e) => updateFormData({ name: e.target.value })}
+                placeholder="Digite seu nome"
+              />
+
               <RadioGroup
                 label="Sexo"
                 options={[

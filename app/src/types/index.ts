@@ -9,6 +9,7 @@ export interface User {
 
 export interface UserProfile {
   age: number;
+  name?: string;
   gender: 'M' | 'F';
   bloodType: string;
   height: number;
