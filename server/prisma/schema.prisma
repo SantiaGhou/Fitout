@@ -1,0 +1,201 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  name      String?
+  type      String   // 'USER' or 'PERSONAL'
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // User Profile (for regular users)
+  userProfile UserProfile?
+
+  // Personal Profile (for personal trainers)
+  personalProfile PersonalProfile?
+
+  // Relationships for personal trainers
+  students        StudentRelation[] @relation("PersonalTrainer")
+  createdWorkouts Workout[]         @relation("WorkoutCreator")
+  createdDiets    Diet[]            @relation("DietCreator")
+  sessions        Session[]         @relation("PersonalTrainerSessions")
+
+  // Relationships for regular users
+  trainer         StudentRelation? @relation("Student")
+  workouts        Workout[]        @relation("WorkoutUser")
+  diets           Diet[]           @relation("DietUser")
+  userSessions    Session[]        @relation("UserSessions")
+  followers       Follow[]         @relation("Following")
+  following       Follow[]         @relation("Follower")
+
+  @@map("users")
+}
+
+model UserProfile {
+  id                   String   @id @default(cuid())
+  userId               String   @unique
+  age                  Int
+  gender               String   // 'M' or 'F'
+  bloodType            String
+  height               Int      // in cm
+  weight               Int      // in kg
+  hasTrainer           Boolean  @default(false)
+  objective            String   // 'MASS', 'FAT_LOSS', 'HEALTH'
+  workoutType          String   // 'GYM', 'CARDIO', 'FUNCTIONAL', 'OTHER'
+  frequency            Int      // days per week
+  schedule             String   // 'MORNING', 'AFTERNOON', 'EVENING', 'FLEXIBLE'
+  allergies            String?
+  avoidFoods           String?
+  dietType             String   // 'FEW_MEALS', 'MANY_MEALS', 'PRACTICAL'
+  intermittentFasting  String   // 'YES', 'NO', 'MAYBE'
+  photo                String?
+  streak               Int      @default(0)
+  workoutDays          String   @default("[]") // JSON string array of dates
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_profiles")
+}
+
+model PersonalProfile {
+  id         String   @id @default(cuid())
+  userId     String   @unique
+  cref       String?
+  photo      String?
+  experience Int      @default(0) // years of experience
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("personal_profiles")
+}
+
+model StudentRelation {
+  id          String   @id @default(cuid())
+  personalId  String
+  studentId   String @unique
+  addedAt     DateTime @default(now())
+
+  personal User @relation("PersonalTrainer", fields: [personalId], references: [id], onDelete: Cascade)
+  student  User @relation("Student", fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@unique([personalId, studentId])
+  @@map("student_relations")
+}
+
+model Workout {
+  id          String      @id @default(cuid())
+  name        String
+  userId      String
+  personalId  String?
+  date        DateTime
+  exercises   Exercise[]
+  completed   Boolean     @default(false)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  user     User  @relation("WorkoutUser", fields: [userId], references: [id], onDelete: Cascade)
+  personal User? @relation("WorkoutCreator", fields: [personalId], references: [id], onDelete: SetNull)
+
+  @@map("workouts")
+}
+
+model Exercise {
+  id        String  @id @default(cuid())
+  workoutId String
+  name      String
+  sets      Int
+  reps      String
+  weight    Int?
+  duration  Int?    // in minutes
+  notes     String?
+  order     Int     @default(0)
+
+  workout Workout @relation(fields: [workoutId], references: [id], onDelete: Cascade)
+
+  @@map("exercises")
+}
+
+model Diet {
+  id         String   @id @default(cuid())
+  userId     String
+  personalId String?
+  date       DateTime
+  meals      Meal[]
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  user     User  @relation("DietUser", fields: [userId], references: [id], onDelete: Cascade)
+  personal User? @relation("DietCreator", fields: [personalId], references: [id], onDelete: SetNull)
+
+  @@map("diets")
+}
+
+model Meal {
+  id       String @id @default(cuid())
+  dietId   String
+  name     String
+  time     String
+  foods    Food[]
+  calories Int
+
+  diet Diet @relation(fields: [dietId], references: [id], onDelete: Cascade)
+
+  @@map("meals")
+}
+
+model Food {
+  id       String @id @default(cuid())
+  mealId   String
+  name     String
+  quantity String
+  calories Int
+
+  meal Meal @relation(fields: [mealId], references: [id], onDelete: Cascade)
+
+  @@map("foods")
+}
+
+model Session {
+  id         String   @id @default(cuid())
+  personalId String
+  studentId  String
+  date       DateTime
+  time       String
+  notes      String?
+  status     String   @default("SCHEDULED") // 'SCHEDULED', 'COMPLETED', 'CANCELLED'
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  personal User @relation("PersonalTrainerSessions", fields: [personalId], references: [id], onDelete: Cascade)
+  student  User @relation("UserSessions", fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model Follow {
+  id          String   @id @default(cuid())
+  followerId  String
+  followingId String
+  createdAt   DateTime @default(now())
+
+  follower  User @relation("Follower", fields: [followerId], references: [id], onDelete: Cascade)
+  following User @relation("Following", fields: [followingId], references: [id], onDelete: Cascade)
+
+  @@unique([followerId, followingId])
+  @@map("follows")
+}

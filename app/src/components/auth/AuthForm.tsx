@@ -45,7 +45,7 @@ export const AuthForm: React.FC = () => {
 
     if (!password) {
       newErrors.password = 'Senha é obrigatória';
-    } else if (password.length < 6) {
+    } else if (password.length < 6 || password.length > 50) {
       newErrors.password = 'Senha deve ter pelo menos 6 caracteres';
     }
 
