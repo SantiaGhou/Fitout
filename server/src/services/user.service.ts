@@ -170,7 +170,7 @@ export class UserService {
       }
     });
 
-    return students.map(relation => ({
+    return students.map((relation: any) => ({
       id: relation.student.id,
       name: relation.student.name,
       email: relation.student.email,

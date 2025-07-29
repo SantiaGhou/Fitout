@@ -1,6 +1,10 @@
 import prisma from '../config/database';
 import { createError } from '../middlewares/errorHandler';
-import { WorkoutInput, UpdateWorkoutInput } from '../schemas/workout.schemas';
+import {
+  WorkoutInput,
+  UpdateWorkoutInput,
+  ExerciseInput,
+} from '../schemas/workout.schemas';
 
 export class WorkoutService {
   static async createWorkout(data: WorkoutInput, creatorId: string) {
@@ -21,7 +25,7 @@ export class WorkoutService {
         personalId: creatorId,
         date: new Date(data.date),
         exercises: {
-          create: data.exercises.map((exercise, index) => ({
+          create: data.exercises.map((exercise: ExerciseInput, index: number) => ({
             ...exercise,
             order: index
           }))
@@ -102,13 +106,17 @@ export class WorkoutService {
       data: {
         name: data.name,
         date: data.date ? new Date(data.date) : undefined,
-        exercises: data.exercises ? {
-          deleteMany: {},
-          create: data.exercises.map((exercise, index) => ({
-            ...exercise,
-            order: index
-          }))
-        } : undefined
+        exercises: data.exercises
+          ? {
+              deleteMany: {},
+              create: data.exercises.map(
+                (exercise: ExerciseInput, index: number) => ({
+                  ...exercise,
+                  order: index,
+                })
+              ),
+            }
+          : undefined
       },
       include: {
         exercises: {
@@ -173,13 +181,16 @@ export class WorkoutService {
 
     if (user?.userProfile) {
       const today = new Date().toISOString().split('T')[0];
-      const workoutDays = user.userProfile.workoutDays || [];
-      
+      const workoutDays: string[] = Array.isArray(user.userProfile.workoutDays)
+        ? (user.userProfile.workoutDays as unknown as string[])
+        : JSON.parse(user.userProfile.workoutDays || '[]');
+
       if (!workoutDays.includes(today)) {
+        workoutDays.push(today);
         await prisma.userProfile.update({
           where: { userId },
           data: {
-            workoutDays: [...workoutDays, today],
+            workoutDays: JSON.stringify(workoutDays),
             streak: user.userProfile.streak + 1
           }
         });
