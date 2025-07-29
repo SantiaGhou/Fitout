@@ -77,7 +77,14 @@ npm install
 # Rode o app localmente
 npm run dev
 
-// Futuramente será adicionado a instruçao de como rodar o backend que no momento está em desenvolvimento
+# Abra um novo terminal para o backend
+cd ../server
+npm install
+npx prisma migrate deploy
+npm run dev
+
+# Defina a URL do backend no frontend criando `app/.env`
+echo "VITE_API_URL=http://localhost:3001/api" > ../app/.env
 ```
 
 >⚠️ Certifique-se de configurar corretamente o backend na pasta /server.

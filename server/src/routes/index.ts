@@ -1,4 +1,4 @@
-import { Router } from 'express';
+import { Router, Request, Response } from 'express';
 import authRoutes from './auth.routes';
 import userRoutes from './user.routes';
 import workoutRoutes from './workout.routes';
@@ -11,7 +11,7 @@ router.use('/users', userRoutes);
 router.use('/workouts', workoutRoutes);
 
 
-router.get('/health', (req, res) => {
+router.get('/health', (req: Request, res: Response) => {
   res.json({ 
     status: 'OK', 
     timestamp: new Date().toISOString(),
