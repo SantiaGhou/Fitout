@@ -23,13 +23,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const storedUser = localStorage.getItem('user');
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
+ useEffect(() => {
+  const storedUser = localStorage.getItem("user");
+
+  if (storedUser && storedUser !== "undefined" && storedUser !== "null") {
+    try {
+      const parsed = JSON.parse(storedUser);
+      setUser(parsed);
+    } catch (e) {
+      console.error("Erro ao parsear user no localStorage:", e);
+      localStorage.removeItem("user");
     }
-    setLoading(false);
-  }, []);
+  }
+
+  setLoading(false);
+}, []);
 
   const login = async (email: string, password: string): Promise<boolean> => {
     try {
