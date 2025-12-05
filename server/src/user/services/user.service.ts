@@ -1,6 +1,6 @@
-import prisma from '../config/database';
-import { createError } from '../middlewares/errorHandler';
-import { UserProfileInput, PersonalProfileInput, UpdateUserInput } from '../schemas/user.schemas';
+import prisma from '../../config/database';
+import { createError } from '../../middlewares/errorHandler';
+import { UserProfileInput, PersonalProfileInput, UpdateUserInput } from '../../user/schemas/user.schemas';
 
 export class UserService {
   static async updateUserProfile(userId: string, data: UserProfileInput) {
@@ -83,13 +83,16 @@ export class UserService {
           { type: 'USER' },
           {
             OR: [
-              { name: { contains: query, mode: 'insensitive' } },
-              { email: { contains: query, mode: 'insensitive' } }
+              { name: { contains: query } },
+              { email: { contains: query } }
             ]
           }
         ]
       },
-      include: {
+      select: {
+        id: true,
+        name: true,
+        email: true,
         userProfile: {
           select: {
             objective: true,
@@ -97,12 +100,6 @@ export class UserService {
             photo: true
           }
         }
-      },
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        userProfile: true
       },
       take: 20
     });

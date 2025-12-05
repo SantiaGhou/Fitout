@@ -49,7 +49,7 @@ async function main() {
           dietType: 'MANY_MEALS',
           intermittentFasting: 'NO',
           streak: 5,
-          workoutDays: ['2024-01-10', '2024-01-11', '2024-01-12']
+
         }
       }
     }
@@ -78,7 +78,7 @@ async function main() {
           dietType: 'FEW_MEALS',
           intermittentFasting: 'YES',
           streak: 12,
-          workoutDays: ['2024-01-08', '2024-01-09', '2024-01-10', '2024-01-11', '2024-01-12']
+        
         }
       }
     }
