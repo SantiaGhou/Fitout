@@ -5,6 +5,8 @@ import rateLimit from 'express-rate-limit';
 import { env } from './src/config/env';
 import routes from './src/routes';
 import { errorHandler, notFoundHandler } from './src/middlewares/errorHandler';
+import { Express } from 'express';
+import { setupSwagger } from './src/config/swagger';
 
 const app = express();
 
@@ -18,7 +20,7 @@ app.use(cors({
 
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 100, 
+  max: 100,
   message: 'Too many requests from this IP, please try again later.'
 });
 app.use('/api', limiter);
@@ -27,6 +29,7 @@ app.use('/api', limiter);
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
+setupSwagger(app);
 
 app.use('/api', routes);
 
