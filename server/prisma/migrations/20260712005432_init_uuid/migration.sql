@@ -1,6 +1,6 @@
 -- CreateTable
 CREATE TABLE "users" (
-    "id" TEXT NOT NULL,
+    "id" UUID NOT NULL,
     "email" TEXT NOT NULL,
     "password" TEXT NOT NULL,
     "name" TEXT,
@@ -13,8 +13,8 @@ CREATE TABLE "users" (
 
 -- CreateTable
 CREATE TABLE "user_profiles" (
-    "id" TEXT NOT NULL,
-    "userId" TEXT NOT NULL,
+    "id" UUID NOT NULL,
+    "userId" UUID NOT NULL,
     "age" INTEGER NOT NULL,
     "gender" TEXT NOT NULL,
     "bloodType" TEXT NOT NULL,
@@ -40,8 +40,8 @@ CREATE TABLE "user_profiles" (
 
 -- CreateTable
 CREATE TABLE "personal_profiles" (
-    "id" TEXT NOT NULL,
-    "userId" TEXT NOT NULL,
+    "id" UUID NOT NULL,
+    "userId" UUID NOT NULL,
     "cref" TEXT,
     "photo" TEXT,
     "experience" INTEGER NOT NULL DEFAULT 0,
@@ -53,9 +53,9 @@ CREATE TABLE "personal_profiles" (
 
 -- CreateTable
 CREATE TABLE "student_relations" (
-    "id" TEXT NOT NULL,
-    "personalId" TEXT NOT NULL,
-    "studentId" TEXT NOT NULL,
+    "id" UUID NOT NULL,
+    "personalId" UUID NOT NULL,
+    "studentId" UUID NOT NULL,
     "addedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "student_relations_pkey" PRIMARY KEY ("id")
@@ -63,10 +63,10 @@ CREATE TABLE "student_relations" (
 
 -- CreateTable
 CREATE TABLE "workouts" (
-    "id" TEXT NOT NULL,
+    "id" UUID NOT NULL,
     "name" TEXT NOT NULL,
-    "userId" TEXT NOT NULL,
-    "personalId" TEXT,
+    "userId" UUID NOT NULL,
+    "personalId" UUID,
     "date" TIMESTAMP(3) NOT NULL,
     "completed" BOOLEAN NOT NULL DEFAULT false,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -77,8 +77,8 @@ CREATE TABLE "workouts" (
 
 -- CreateTable
 CREATE TABLE "exercises" (
-    "id" TEXT NOT NULL,
-    "workoutId" TEXT NOT NULL,
+    "id" UUID NOT NULL,
+    "workoutId" UUID NOT NULL,
     "name" TEXT NOT NULL,
     "sets" INTEGER NOT NULL,
     "reps" TEXT NOT NULL,
@@ -92,9 +92,9 @@ CREATE TABLE "exercises" (
 
 -- CreateTable
 CREATE TABLE "diets" (
-    "id" TEXT NOT NULL,
-    "userId" TEXT NOT NULL,
-    "personalId" TEXT,
+    "id" UUID NOT NULL,
+    "userId" UUID NOT NULL,
+    "personalId" UUID,
     "date" TIMESTAMP(3) NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
@@ -104,8 +104,8 @@ CREATE TABLE "diets" (
 
 -- CreateTable
 CREATE TABLE "meals" (
-    "id" TEXT NOT NULL,
-    "dietId" TEXT NOT NULL,
+    "id" UUID NOT NULL,
+    "dietId" UUID NOT NULL,
     "name" TEXT NOT NULL,
     "time" TEXT NOT NULL,
     "calories" INTEGER NOT NULL,
@@ -115,8 +115,8 @@ CREATE TABLE "meals" (
 
 -- CreateTable
 CREATE TABLE "foods" (
-    "id" TEXT NOT NULL,
-    "mealId" TEXT NOT NULL,
+    "id" UUID NOT NULL,
+    "mealId" UUID NOT NULL,
     "name" TEXT NOT NULL,
     "quantity" TEXT NOT NULL,
     "calories" INTEGER NOT NULL,
@@ -126,9 +126,9 @@ CREATE TABLE "foods" (
 
 -- CreateTable
 CREATE TABLE "sessions" (
-    "id" TEXT NOT NULL,
-    "personalId" TEXT NOT NULL,
-    "studentId" TEXT NOT NULL,
+    "id" UUID NOT NULL,
+    "personalId" UUID NOT NULL,
+    "studentId" UUID NOT NULL,
     "date" TIMESTAMP(3) NOT NULL,
     "time" TEXT NOT NULL,
     "notes" TEXT,
@@ -141,9 +141,9 @@ CREATE TABLE "sessions" (
 
 -- CreateTable
 CREATE TABLE "follows" (
-    "id" TEXT NOT NULL,
-    "followerId" TEXT NOT NULL,
-    "followingId" TEXT NOT NULL,
+    "id" UUID NOT NULL,
+    "followerId" UUID NOT NULL,
+    "followingId" UUID NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "follows_pkey" PRIMARY KEY ("id")

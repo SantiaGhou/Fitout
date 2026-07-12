@@ -11,7 +11,7 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(cuid())
+  id        String   @id @default(uuid()) @db.Uuid
   email     String   @unique
   password  String
   name      String?
@@ -43,8 +43,8 @@ model User {
 }
 
 model UserProfile {
-  id                   String   @id @default(cuid())
-  userId               String   @unique
+  id                   String   @id @default(uuid()) @db.Uuid
+  userId               String   @unique @db.Uuid
   age                  Int
   gender               String   // 'M' or 'F'
   bloodType            String
@@ -71,8 +71,8 @@ model UserProfile {
 }
 
 model PersonalProfile {
-  id         String   @id @default(cuid())
-  userId     String   @unique
+  id         String   @id @default(uuid()) @db.Uuid
+  userId     String   @unique @db.Uuid
   cref       String?
   photo      String?
   experience Int      @default(0) // years of experience
@@ -85,10 +85,10 @@ model PersonalProfile {
 }
 
 model StudentRelation {
-  id          String   @id @default(cuid())
-  personalId  String
-  studentId   String @unique
-  addedAt     DateTime @default(now())
+  id         String   @id @default(uuid()) @db.Uuid
+  personalId String   @db.Uuid
+  studentId  String   @unique @db.Uuid
+  addedAt    DateTime @default(now())
 
   personal User @relation("PersonalTrainer", fields: [personalId], references: [id], onDelete: Cascade)
   student  User @relation("Student", fields: [studentId], references: [id], onDelete: Cascade)
@@ -98,15 +98,15 @@ model StudentRelation {
 }
 
 model Workout {
-  id          String      @id @default(cuid())
-  name        String
-  userId      String
-  personalId  String?
-  date        DateTime
-  exercises   Exercise[]
-  completed   Boolean     @default(false)
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
+  id         String     @id @default(uuid()) @db.Uuid
+  name       String
+  userId     String     @db.Uuid
+  personalId String?    @db.Uuid
+  date       DateTime
+  exercises  Exercise[]
+  completed  Boolean    @default(false)
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
 
   user     User  @relation("WorkoutUser", fields: [userId], references: [id], onDelete: Cascade)
   personal User? @relation("WorkoutCreator", fields: [personalId], references: [id], onDelete: SetNull)
@@ -115,8 +115,8 @@ model Workout {
 }
 
 model Exercise {
-  id        String  @id @default(cuid())
-  workoutId String
+  id        String  @id @default(uuid()) @db.Uuid
+  workoutId String  @db.Uuid
   name      String
   sets      Int
   reps      String
@@ -131,9 +131,9 @@ model Exercise {
 }
 
 model Diet {
-  id         String   @id @default(cuid())
-  userId     String
-  personalId String?
+  id         String   @id @default(uuid()) @db.Uuid
+  userId     String   @db.Uuid
+  personalId String?  @db.Uuid
   date       DateTime
   meals      Meal[]
   createdAt  DateTime @default(now())
@@ -146,8 +146,8 @@ model Diet {
 }
 
 model Meal {
-  id       String @id @default(cuid())
-  dietId   String
+  id       String @id @default(uuid()) @db.Uuid
+  dietId   String @db.Uuid
   name     String
   time     String
   foods    Food[]
@@ -159,8 +159,8 @@ model Meal {
 }
 
 model Food {
-  id       String @id @default(cuid())
-  mealId   String
+  id       String @id @default(uuid()) @db.Uuid
+  mealId   String @db.Uuid
   name     String
   quantity String
   calories Int
@@ -171,9 +171,9 @@ model Food {
 }
 
 model Session {
-  id         String   @id @default(cuid())
-  personalId String
-  studentId  String
+  id         String   @id @default(uuid()) @db.Uuid
+  personalId String   @db.Uuid
+  studentId  String   @db.Uuid
   date       DateTime
   time       String
   notes      String?
@@ -188,9 +188,9 @@ model Session {
 }
 
 model Follow {
-  id          String   @id @default(cuid())
-  followerId  String
-  followingId String
+  id          String   @id @default(uuid()) @db.Uuid
+  followerId  String   @db.Uuid
+  followingId String   @db.Uuid
   createdAt   DateTime @default(now())
 
   follower  User @relation("Follower", fields: [followerId], references: [id], onDelete: Cascade)
