@@ -120,16 +120,6 @@ echo "VITE_API_URL=http://localhost:3001/api" > ../app/.env
       <sub><b>Guilherme Rebouças</b></sub><br />
       <a href="https://github.com/GuilhermeRBr" target="_blank">@GuilhermeRBr</a>
     </td>
-    <td align="center">
-      <img src="https://github.com/Vitormac19.png" width="100px;" alt="Rotivx"/><br />
-      <sub><b>Rotivx</b></sub><br />
-      <a href="https://github.com/Vitormac19" target="_blan_
-@vinidevbr">@Vitormac19</a>
-    <td align="center">
-        <img src="https://github.com/LipeGabrielDev.png" width="100px;" alt="Lipe Dev"/><br />
-        <sub><b>Lipe Dev</b></sub><br />
-        <a href="https://github.com/LipeGabrielDev" target="_blan_
-    @vinidevbr">@LipeGabrielDev</a>
 
 </table>
 

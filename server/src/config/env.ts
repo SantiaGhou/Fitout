@@ -5,7 +5,7 @@ const envSchema = z.object({
   PORT: z.string().default('3001'),
   JWT_SECRET: z.string().default('your-super-secret-jwt-key'),
   JWT_EXPIRES_IN: z.string().default('7d'),
-  DATABASE_URL: z.string().default('file:./dev.db'),
+  DATABASE_URL: z.string(),
 });
 
 export const env = envSchema.parse(process.env);
