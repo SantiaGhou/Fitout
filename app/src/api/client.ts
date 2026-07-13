@@ -1,13 +1,22 @@
 const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
 
 async function request(path: string, options: RequestInit = {}) {
+  const token = localStorage.getItem('token');
   const res = await fetch(`${API_BASE}${path}`, {
-    headers: { 'Content-Type': 'application/json', ...(options.headers || {}) },
+    headers: {
+      'Content-Type': 'application/json',
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      ...(options.headers || {}),
+    },
     ...options,
   });
   if (!res.ok) {
     const data = await res.json().catch(() => ({}));
-    throw new Error(data.error || res.statusText);
+    // Mostra detalhes de validação se disponíveis
+    const message = data.details
+      ? `${data.error}: ${JSON.stringify(data.details)}`
+      : data.error || res.statusText;
+    throw new Error(message);
   }
   return res.json();
 }
@@ -25,8 +34,24 @@ export const api = {
       body: JSON.stringify({ email, password, type: type.toUpperCase() }),
     }),
 
-  getProfile: (token: string) =>
-    request('/auth/profile', {
-      headers: { Authorization: `Bearer ${token}` },
+  getProfile: () =>
+    request('/auth/profile'),
+
+  updateUserProfile: (data: Record<string, unknown>) =>
+    request('/users/profile/user', {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    }),
+
+  updatePersonalProfile: (data: Record<string, unknown>) =>
+    request('/users/profile/personal', {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    }),
+
+  updateUser: (data: Record<string, unknown>) =>
+    request('/users/profile', {
+      method: 'PUT',
+      body: JSON.stringify(data),
     }),
 };

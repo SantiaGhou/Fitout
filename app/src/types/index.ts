@@ -81,7 +81,7 @@ export interface AuthContextType {
   login: (email: string, password: string) => Promise<boolean>;
   register: (email: string, password: string, type: 'personal' | 'user') => Promise<boolean>;
   logout: () => void;
-  updateProfile: (profile: Partial<UserProfile | PersonalProfile>) => void;
+  updateProfile: (profile: Partial<UserProfile | PersonalProfile>) => Promise<boolean>;
   loading: boolean;
 }
 
