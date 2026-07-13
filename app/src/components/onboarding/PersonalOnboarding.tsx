@@ -3,19 +3,26 @@ import { Camera, Upload } from 'lucide-react';
 import { Button } from '../ui/Button';
 import { Input } from '../ui/Input';
 import { useAuth } from '../../contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
 import { PersonalProfile } from '../../types';
 
 export const PersonalOnboarding: React.FC = () => {
   const [formData, setFormData] = useState<Partial<PersonalProfile>>({
-    students: [],
     experience: 0,
   });
   const [name, setName] = useState('');
-  const { updateProfile } = useAuth();
+  const [saving, setSaving] = useState(false);
+  const { updateProfile, user, login } = useAuth();
+  const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    updateProfile({ ...formData, name } as any);
+    setSaving(true);
+    const success = await updateProfile(formData as Partial<PersonalProfile>);
+    setSaving(false);
+    if (success) {
+      navigate('/');
+    }
   };
 
   const updateFormData = (data: Partial<PersonalProfile>) => {
@@ -39,19 +46,11 @@ export const PersonalOnboarding: React.FC = () => {
             <div className="w-32 h-32 bg-background-tertiary rounded-full flex items-center justify-center border-2 border-dashed border-background-gray">
               <Camera className="h-8 w-8 text-content-secondary" />
             </div>
-            <Button variant="outline" size="sm">
+            <Button variant="outline" size="sm" type="button">
               <Upload className="h-4 w-4 mr-2" />
               Adicionar foto
             </Button>
           </div>
-
-          <Input
-            label="Nome completo"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="Seu nome profissional"
-            required
-          />
 
           <Input
             label="CREF (opcional)"
@@ -68,8 +67,8 @@ export const PersonalOnboarding: React.FC = () => {
             placeholder="0"
           />
 
-          <Button type="submit" className="w-full">
-            Completar configuração
+          <Button type="submit" className="w-full" disabled={saving}>
+            {saving ? 'Salvando...' : 'Completar configuração'}
           </Button>
         </form>
       </div>

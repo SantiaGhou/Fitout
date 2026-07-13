@@ -133,7 +133,7 @@ router.get('/search',
  */
 router.post('/students',
   requireUserType('PERSONAL'),
-  validateBody(z.object({ studentId: z.string().cuid() })),
+  validateBody(z.object({ studentId: z.string().uuid() })),
   UserController.addStudent
 );
 

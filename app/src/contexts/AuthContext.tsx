@@ -13,9 +13,12 @@ export const useAuth = () => {
 };
 
 function mapUser(serverUser: any): User {
+  // O backend retorna userProfile ou personalProfile — normaliza para profile
+  const profile = serverUser.userProfile ?? serverUser.personalProfile ?? undefined;
   return {
     ...serverUser,
     type: serverUser.type?.toLowerCase(),
+    profile,
   } as User;
 }
 
@@ -23,21 +26,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
- useEffect(() => {
-  const storedUser = localStorage.getItem("user");
-
-  if (storedUser && storedUser !== "undefined" && storedUser !== "null") {
-    try {
-      const parsed = JSON.parse(storedUser);
-      setUser(parsed);
-    } catch (e) {
-      console.error("Erro ao parsear user no localStorage:", e);
-      localStorage.removeItem("user");
+  useEffect(() => {
+    const storedUser = localStorage.getItem('user');
+    if (storedUser && storedUser !== 'undefined' && storedUser !== 'null') {
+      try {
+        setUser(JSON.parse(storedUser));
+      } catch (e) {
+        console.error('Erro ao parsear user no localStorage:', e);
+        localStorage.removeItem('user');
+      }
     }
-  }
-
-  setLoading(false);
-}, []);
+    setLoading(false);
+  }, []);
 
   const login = async (email: string, password: string): Promise<boolean> => {
     try {
@@ -47,7 +47,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       localStorage.setItem('user', JSON.stringify(mapped));
       localStorage.setItem('token', data.token);
       return true;
-    } catch (error) {
+    } catch {
       return false;
     }
   };
@@ -64,7 +64,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       localStorage.setItem('user', JSON.stringify(mapped));
       localStorage.setItem('token', data.token);
       return true;
-    } catch (error) {
+    } catch {
       return false;
     }
   };
@@ -75,14 +75,57 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     localStorage.removeItem('token');
   };
 
-  const updateProfile = (profile: Partial<UserProfile | PersonalProfile>) => {
-    if (user) {
-      const updatedUser = {
+  const updateProfile = async (profile: Partial<UserProfile | PersonalProfile>): Promise<boolean> => {
+    if (!user) {
+      console.error('[updateProfile] user é null, abortando');
+      return false;
+    }
+
+    try {
+      const isPersonal = user.type === 'personal';
+      console.log('[updateProfile] dados recebidos:', profile);
+
+      // name vai para a tabela users (PUT /users/profile), não para user_profiles
+      const { name, ...profileData } = profile as any;
+
+      if (name) {
+        await api.updateUser({ name });
+      }
+
+      // Backend agora aceita qualquer case e normaliza internamente
+      const enumFields = new Set(['gender', 'objective', 'workoutType', 'schedule', 'dietType', 'intermittentFasting']);
+
+      const payload: Record<string, unknown> = Object.fromEntries(
+        Object.entries(profileData).map(([k, v]) => [
+          k,
+          enumFields.has(k) && typeof v === 'string' ? v.toUpperCase() : v,
+        ])
+      );
+
+      // workoutDays precisa ser serializado como JSON string
+      if (!isPersonal && Array.isArray(payload.workoutDays)) {
+        payload.workoutDays = JSON.stringify(payload.workoutDays);
+      }
+
+      console.log('[updateProfile] payload para o backend:', payload);
+
+      const { data } = (isPersonal
+        ? await api.updatePersonalProfile(payload as Record<string, unknown>)
+        : await api.updateUserProfile(payload as Record<string, unknown>)) as any;
+
+      console.log('[updateProfile] resposta do backend:', data);
+
+      const updatedUser: User = {
         ...user,
-        profile: { ...user.profile, ...profile },
-      } as User;
+        ...(name ? { name } : {}),
+        profile: data,
+      };
       setUser(updatedUser);
       localStorage.setItem('user', JSON.stringify(updatedUser));
+      return true;
+    } catch (error) {
+      console.error('[updateProfile] erro:', error);
+      return false;
     }
   };
 

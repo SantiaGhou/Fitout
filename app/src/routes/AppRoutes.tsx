@@ -26,13 +26,17 @@ function PrivateRoute({ children }: { children: React.ReactNode }) {
 
   if (loading) return <div>Carregando...</div>;
   if (!user) return <Navigate to="/login" />;
+  if (!user.profile) return <Navigate to="/onboarding" />;
   return <>{children}</>;
 }
 
 // 🔄 Direciona pro onboarding certo baseado no tipo de usuário
 function OnboardingRoute() {
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
 
+  console.log('[OnboardingRoute] loading:', loading, 'user:', user?.id, 'profile:', user?.profile);
+
+  if (loading) return <div>Carregando...</div>;
   if (!user) return <Navigate to="/login" />;
   if (user.profile) return <Navigate to="/" />;
 

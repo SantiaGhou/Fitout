@@ -4,6 +4,7 @@ import { Button } from '../ui/Button';
 import { Input } from '../ui/Input';
 import { RadioGroup } from '../ui/RadioGroup';
 import { useAuth } from '../../contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
 import { UserProfile } from '../../types';
 
 export const UserOnboarding: React.FC = () => {
@@ -13,15 +14,64 @@ export const UserOnboarding: React.FC = () => {
     streak: 0,
     workoutDays: [],
   });
-  const { updateProfile } = useAuth();
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState('');
+  const { updateProfile, user } = useAuth();
+  const navigate = useNavigate();
 
   const totalSteps = 5;
 
-  const handleNext = () => {
+  const validateStep = (): boolean => {
+    switch (step) {
+      case 1:
+        if (!formData.age || !formData.gender || !formData.bloodType || !formData.height || !formData.weight) {
+          setError('Preencha todos os campos obrigatórios.');
+          return false;
+        }
+        break;
+      case 2:
+        if (!formData.objective) {
+          setError('Selecione um objetivo.');
+          return false;
+        }
+        break;
+      case 3:
+        if (!formData.workoutType || formData.frequency === undefined || !formData.schedule) {
+          setError('Preencha todos os campos obrigatórios.');
+          return false;
+        }
+        break;
+      case 4:
+        if (!formData.dietType) {
+          setError('Selecione um tipo de dieta.');
+          return false;
+        }
+        break;
+      case 5:
+        if (!formData.intermittentFasting) {
+          setError('Selecione uma opção.');
+          return false;
+        }
+        break;
+    }
+    setError('');
+    return true;
+  };
+
+  const handleNext = async () => {
+    if (!validateStep()) return;
+
     if (step < totalSteps) {
       setStep(step + 1);
     } else {
-      updateProfile(formData);
+      setSaving(true);
+      const success = await updateProfile(formData);
+      setSaving(false);
+      if (success) {
+        navigate('/');
+      } else {
+        setError('Erro ao salvar perfil. Tente novamente.');
+      }
     }
   };
 
@@ -32,6 +82,7 @@ export const UserOnboarding: React.FC = () => {
   };
 
   const updateFormData = (data: Partial<UserProfile>) => {
+    setError('');
     setFormData({ ...formData, ...data });
   };
 
@@ -237,20 +288,25 @@ export const UserOnboarding: React.FC = () => {
           {renderStep()}
         </div>
 
-        <div className="flex justify-between mt-8">
-          <Button
-            variant="outline"
-            onClick={handleBack}
-            disabled={step === 1}
-          >
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Voltar
-          </Button>
+        <div className="mt-8">
+          {error && (
+            <p className="text-red-500 text-sm mb-4 text-center">{error}</p>
+          )}
+          <div className="flex justify-between">
+            <Button
+              variant="outline"
+              onClick={handleBack}
+              disabled={step === 1}
+            >
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              Voltar
+            </Button>
 
-          <Button onClick={handleNext}>
-            {step === totalSteps ? 'Finalizar' : 'Próximo'}
-            {step !== totalSteps && <ArrowRight className="h-4 w-4 ml-2" />}
-          </Button>
+            <Button onClick={handleNext} disabled={saving}>
+              {step === totalSteps ? (saving ? 'Salvando...' : 'Finalizar') : 'Próximo'}
+              {step !== totalSteps && <ArrowRight className="h-4 w-4 ml-2" />}
+            </Button>
+          </div>
         </div>
       </div>
     </div>
