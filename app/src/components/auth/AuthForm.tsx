@@ -14,6 +14,7 @@ export const AuthForm: React.FC = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [userType, setUserType] = useState<'personal' | 'user'>('user');
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
 
@@ -150,15 +151,25 @@ export const AuthForm: React.FC = () => {
 
           {!isLogin && (
             <>
-              <Input
-                label="Confirmar Senha"
-                type="password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                error={errors.confirmPassword}
-                placeholder="••••••••"
-                required={true}
-              />
+              <div className="relative">
+                <Input
+                  label="Confirmar Senha"
+                  type={showConfirmPassword ? 'text' : 'password'}
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  error={errors.confirmPassword}
+                  placeholder="••••••••"
+                  required={true}
+                />
+                <button
+                  type="button"
+                  className="absolute right-3 top-9 text-content-secondary hover:text-content-primary transition-colors"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  aria-label={showConfirmPassword ? 'Ocultar senha' : 'Mostrar senha'}
+                >
+                  {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                </button>
+              </div>
 
               <RadioGroup
                 label="Tipo de conta"
