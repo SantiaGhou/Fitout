@@ -32,27 +32,51 @@ export const RadioGroup: React.FC<RadioGroupProps> = ({
         </label>
       )}
       <div className="space-y-2">
-        {options.map((option) => (
-          <label
-            key={option.value}
-            className="flex items-start space-x-3 p-3 rounded-lg border border-background-tertiary hover:bg-background-tertiary cursor-pointer transition-all duration-200"
-          >
-            <input
-              type="radio"
-              name={name}
-              value={option.value}
-              checked={value === option.value}
-              onChange={(e) => onChange(e.target.value)}
-              className="mt-1 h-4 w-4 text-content-brand focus:ring-content-brand border-background-gray"
-            />
-            <div className="flex-1">
-              <div className="text-content-primary font-medium">{option.label}</div>
-              {option.description && (
-                <div className="text-sm text-content-secondary">{option.description}</div>
+        {options.map((option) => {
+          const isSelected = value === option.value;
+          return (
+            <label
+              key={option.value}
+              className={cn(
+                'flex items-start space-x-3 p-3 rounded-lg border cursor-pointer transition-all duration-200',
+                isSelected
+                  ? 'border-content-brand bg-content-brand/10'
+                  : 'border-background-tertiary hover:bg-background-tertiary'
               )}
-            </div>
-          </label>
-        ))}
+            >
+              <input
+                type="radio"
+                name={name}
+                value={option.value}
+                checked={isSelected}
+                onChange={(e) => onChange(e.target.value)}
+                className="sr-only"
+              />
+
+              {/* Radio circle customizado */}
+              <div className={cn(
+                'mt-0.5 flex-shrink-0 h-4 w-4 rounded-full border-2 flex items-center justify-center transition-all duration-200',
+                isSelected ? 'border-content-brand' : 'border-background-gray'
+              )}>
+                {isSelected && (
+                  <div className="h-2 w-2 rounded-full bg-content-brand" />
+                )}
+              </div>
+
+              <div className="flex-1">
+                <div className={cn(
+                  'font-medium transition-colors duration-200',
+                  isSelected ? 'text-content-brand' : 'text-content-primary'
+                )}>
+                  {option.label}
+                </div>
+                {option.description && (
+                  <div className="text-sm text-content-secondary">{option.description}</div>
+                )}
+              </div>
+            </label>
+          );
+        })}
       </div>
     </div>
   );
