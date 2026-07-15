@@ -79,7 +79,7 @@ export interface Food {
 export interface AuthContextType {
   user: User | null;
   login: (email: string, password: string) => Promise<boolean>;
-  register: (email: string, password: string, type: 'personal' | 'user') => Promise<boolean>;
+  register: (email: string, password: string, type: 'personal' | 'user', name?: string) => Promise<boolean>;
   logout: () => void;
   updateProfile: (profile: Partial<UserProfile | PersonalProfile>) => Promise<boolean>;
   loading: boolean;

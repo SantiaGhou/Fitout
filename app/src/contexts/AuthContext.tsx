@@ -55,10 +55,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const register = async (
     email: string,
     password: string,
-    type: 'personal' | 'user'
+    type: 'personal' | 'user',
+    name?: string
   ): Promise<boolean> => {
     try {
-      const { data } = await api.register(email, password, type) as any;
+      const { data } = await api.register(email, password, type, name) as any;
       const mapped = mapUser(data.user);
       setUser(mapped);
       localStorage.setItem('user', JSON.stringify(mapped));

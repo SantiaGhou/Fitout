@@ -90,9 +90,11 @@ export const UserOnboarding: React.FC = () => {
     switch (step) {
       case 1:
         return (
-          <div className="space-y-6">
+          <div className="space-y-4">
             <h2 className="text-2xl font-bold text-content-primary">Informações Básicas</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+            {/* Linha 1: Idade + Tipo Sanguíneo */}
+            <div className="grid grid-cols-2 gap-4">
               <Input
                 label="Idade"
                 type="number"
@@ -101,29 +103,15 @@ export const UserOnboarding: React.FC = () => {
                 placeholder="25"
               />
               <Input
-                label="Nome"
-                type="text" 
-                value={formData.name || ''}
-                onChange={(e) => updateFormData({ name: e.target.value })}
-                placeholder="Digite seu nome"
-              />
-
-              <RadioGroup
-                label="Sexo"
-                options={[
-                  { value: 'M', label: 'Masculino' },
-                  { value: 'F', label: 'Feminino' },
-                ]}
-                value={formData.gender || ''}
-                onChange={(value) => updateFormData({ gender: value as 'M' | 'F' })}
-                name="gender"
-              />
-              <Input
                 label="Tipo Sanguíneo"
                 value={formData.bloodType || ''}
                 onChange={(e) => updateFormData({ bloodType: e.target.value })}
                 placeholder="O+"
               />
+            </div>
+
+            {/* Linha 2: Altura + Peso */}
+            <div className="grid grid-cols-2 gap-4">
               <Input
                 label="Altura (cm)"
                 type="number"
@@ -139,16 +127,64 @@ export const UserOnboarding: React.FC = () => {
                 placeholder="70"
               />
             </div>
-            <RadioGroup
-              label="Possui treinador?"
-              options={[
-                { value: 'false', label: 'Não' },
-                { value: 'true', label: 'Sim' },
-              ]}
-              value={formData.hasTrainer?.toString() || 'false'}
-              onChange={(value) => updateFormData({ hasTrainer: value === 'true' })}
-              name="hasTrainer"
-            />
+
+            {/* Linha 3: Sexo e Possui treinador lado a lado */}
+            <div className="grid grid-cols-2 gap-4">
+
+              {/* Sexo */}
+              <div>
+                <label className="block text-sm font-medium text-content-secondary mb-2">Sexo</label>
+                <div className="space-y-2">
+                  {(['M', 'F'] as const).map((val) => (
+                    <label
+                      key={val}
+                      className={`flex items-center gap-3 p-4 rounded-lg border cursor-pointer transition-all duration-200 ${
+                        formData.gender === val
+                          ? 'border-content-brand bg-content-brand/10'
+                          : 'border-background-tertiary hover:bg-background-tertiary/60'
+                      }`}
+                    >
+                      <input type="radio" name="gender" value={val} checked={formData.gender === val} onChange={() => updateFormData({ gender: val })} className="sr-only" />
+                      <div className={`shrink-0 h-5 w-5 rounded-full border-2 flex items-center justify-center transition-all duration-200 ${formData.gender === val ? 'border-content-brand' : 'border-background-gray'}`}>
+                        {formData.gender === val && <div className="h-2.5 w-2.5 rounded-full bg-content-brand" />}
+                      </div>
+                      <span className={`font-semibold text-sm ${formData.gender === val ? 'text-content-brand' : 'text-content-primary'}`}>
+                        {val === 'M' ? 'Masculino' : 'Feminino'}
+                      </span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+
+              {/* Possui treinador */}
+              <div>
+                <label className="block text-sm font-medium text-content-secondary mb-2">Possui treinador?</label>
+                <div className="space-y-2">
+                  {[{ value: 'true', label: 'Sim' }, { value: 'false', label: 'Não' }].map((opt) => {
+                    const isSelected = (formData.hasTrainer?.toString() || 'false') === opt.value;
+                    return (
+                      <label
+                        key={opt.value}
+                        className={`flex items-center gap-3 p-4 rounded-lg border cursor-pointer transition-all duration-200 ${
+                          isSelected
+                            ? 'border-content-brand bg-content-brand/10'
+                            : 'border-background-tertiary hover:bg-background-tertiary/60'
+                        }`}
+                      >
+                        <input type="radio" name="hasTrainer" value={opt.value} checked={isSelected} onChange={() => updateFormData({ hasTrainer: opt.value === 'true' })} className="sr-only" />
+                        <div className={`shrink-0 h-5 w-5 rounded-full border-2 flex items-center justify-center transition-all duration-200 ${isSelected ? 'border-content-brand' : 'border-background-gray'}`}>
+                          {isSelected && <div className="h-2.5 w-2.5 rounded-full bg-content-brand" />}
+                        </div>
+                        <span className={`font-semibold text-sm ${isSelected ? 'text-content-brand' : 'text-content-primary'}`}>
+                          {opt.label}
+                        </span>
+                      </label>
+                    );
+                  })}
+                </div>
+              </div>
+
+            </div>
           </div>
         );
 
