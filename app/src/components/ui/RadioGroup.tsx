@@ -38,10 +38,10 @@ export const RadioGroup: React.FC<RadioGroupProps> = ({
             <label
               key={option.value}
               className={cn(
-                'flex items-start space-x-3 p-3 rounded-lg border cursor-pointer transition-all duration-200',
+                'flex items-center gap-3 p-4 rounded-lg border cursor-pointer transition-all duration-200',
                 isSelected
                   ? 'border-content-brand bg-content-brand/10'
-                  : 'border-background-tertiary hover:bg-background-tertiary'
+                  : 'border-background-tertiary hover:bg-background-tertiary/60'
               )}
             >
               <input
@@ -55,23 +55,27 @@ export const RadioGroup: React.FC<RadioGroupProps> = ({
 
               {/* Radio circle customizado */}
               <div className={cn(
-                'mt-0.5 flex-shrink-0 h-4 w-4 rounded-full border-2 flex items-center justify-center transition-all duration-200',
-                isSelected ? 'border-content-brand' : 'border-background-gray'
+                'shrink-0 h-5 w-5 rounded-full border-2 flex items-center justify-center transition-all duration-200',
+                isSelected
+                  ? 'border-content-brand'
+                  : 'border-background-gray'
               )}>
                 {isSelected && (
-                  <div className="h-2 w-2 rounded-full bg-content-brand" />
+                  <div className="h-2.5 w-2.5 rounded-full bg-content-brand" />
                 )}
               </div>
 
-              <div className="flex-1">
-                <div className={cn(
-                  'font-medium transition-colors duration-200',
+              <div className="flex flex-col">
+                <span className={cn(
+                  'font-semibold text-sm leading-tight transition-colors duration-200',
                   isSelected ? 'text-content-brand' : 'text-content-primary'
                 )}>
                   {option.label}
-                </div>
+                </span>
                 {option.description && (
-                  <div className="text-sm text-content-secondary">{option.description}</div>
+                  <span className="text-xs text-content-secondary mt-0.5">
+                    {option.description}
+                  </span>
                 )}
               </div>
             </label>
