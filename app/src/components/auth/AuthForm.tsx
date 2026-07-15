@@ -10,6 +10,7 @@ import Logo from '../../assets/images/LogoWhite.svg';
 export const AuthForm: React.FC = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState('');
+  const [name, setName] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [userType, setUserType] = useState<'personal' | 'user'>('user');
@@ -51,6 +52,9 @@ export const AuthForm: React.FC = () => {
     }
 
     if (!isLogin) {
+      if (!name.trim()) {
+        newErrors.name = 'Nome é obrigatório';
+      }
       if (!confirmPassword) {
         newErrors.confirmPassword = 'Confirmação de senha é obrigatória';
       } else if (password !== confirmPassword) {
@@ -75,7 +79,7 @@ export const AuthForm: React.FC = () => {
       if (isLogin) {
         success = await login(email, password);
       } else {
-        success = await register(email, password, userType);
+        success = await register(email, password, userType, name);
       }
 
       if (!success) {
@@ -94,6 +98,7 @@ export const AuthForm: React.FC = () => {
     setIsLogin(!isLogin);
     setErrors({});
     setEmail('');
+    setName('');
     setPassword('');
     setConfirmPassword('');
   };
@@ -119,6 +124,18 @@ export const AuthForm: React.FC = () => {
         </div>
 
         <form className="space-y-6" onSubmit={handleSubmit}>
+          {!isLogin && (
+            <Input
+              label="Nome"
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              error={errors.name}
+              placeholder="Seu nome completo"
+              required={true}
+            />
+          )}
+
           <Input
             label="E-mail"
             type="email"

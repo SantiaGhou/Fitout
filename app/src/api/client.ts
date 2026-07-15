@@ -28,10 +28,10 @@ export const api = {
       body: JSON.stringify({ email, password }),
     }),
 
-  register: (email: string, password: string, type: 'personal' | 'user') =>
+  register: (email: string, password: string, type: 'personal' | 'user', name?: string) =>
     request('/auth/register', {
       method: 'POST',
-      body: JSON.stringify({ email, password, type: type.toUpperCase() }),
+      body: JSON.stringify({ email, password, type: type.toUpperCase(), name }),
     }),
 
   getProfile: () =>
