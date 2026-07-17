@@ -1,17 +1,29 @@
 import { z } from 'zod';
 
+const passwordSchema = z
+  .string()
+  .min(8, 'A senha deve ter no mínimo 8 caracteres')
+  .max(16, 'A senha deve ter no máximo 16 caracteres')
+  .regex(/[A-Z]/, 'A senha deve conter pelo menos uma letra maiúscula')
+  .regex(/[a-z]/, 'A senha deve conter pelo menos uma letra minúscula')
+  .regex(/[0-9]/, 'A senha deve conter pelo menos um número')
+  .regex(/[^A-Za-z0-9]/, 'A senha deve conter pelo menos um caractere especial');
+
 export const registerSchema = z.object({
-  email: z.string().email('Invalid email format'),
-  password: z.string().min(6, 'Password must be at least 6 characters'),
+  name: z.string().min(1, 'Nome é obrigatório').optional(),
+  email: z
+    .string()
+    .email('E-mail inválido')
+    .max(100, 'E-mail deve ter no máximo 100 caracteres'),
+  password: passwordSchema,
   type: z.enum(['USER', 'PERSONAL'], {
-    required_error: 'User type is required'
+    required_error: 'Tipo de usuário é obrigatório',
   }),
-  name: z.string().optional()
 });
 
 export const loginSchema = z.object({
-  email: z.string().email('Invalid email format'),
-  password: z.string().min(1, 'Password is required')
+  email: z.string().email('E-mail inválido'),
+  password: z.string().min(1, 'Senha é obrigatória'),
 });
 
 export type RegisterInput = z.infer<typeof registerSchema>;
