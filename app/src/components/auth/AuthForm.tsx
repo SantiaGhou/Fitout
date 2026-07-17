@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Eye, EyeOff, Dumbbell } from 'lucide-react';
+import { Eye, EyeOff } from 'lucide-react';
 import { Button } from '../ui/Button';
 import { Input } from '../ui/Input';
 import { RadioGroup } from '../ui/RadioGroup';
@@ -39,16 +39,33 @@ export const AuthForm: React.FC = () => {
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
 
+    // Email
     if (!email) {
       newErrors.email = 'E-mail é obrigatório';
-    } else if (!/\S+@\S+\.\S+/.test(email)) {
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       newErrors.email = 'E-mail inválido';
+    } else if (email.length > 100) {
+      newErrors.email = 'E-mail deve ter no máximo 100 caracteres';
     }
 
+    // Senha
     if (!password) {
       newErrors.password = 'Senha é obrigatória';
-    } else if (password.length < 6 || password.length > 50) {
-      newErrors.password = 'Senha deve ter pelo menos 6 caracteres';
+    } else if (!isLogin) {
+      // Validação completa só no cadastro
+      if (password.length < 8) {
+        newErrors.password = 'Mínimo 8 caracteres';
+      } else if (password.length > 16) {
+        newErrors.password = 'Máximo 16 caracteres';
+      } else if (!/[A-Z]/.test(password)) {
+        newErrors.password = 'Deve conter pelo menos uma letra maiúscula';
+      } else if (!/[a-z]/.test(password)) {
+        newErrors.password = 'Deve conter pelo menos uma letra minúscula';
+      } else if (!/[0-9]/.test(password)) {
+        newErrors.password = 'Deve conter pelo menos um número';
+      } else if (!/[^A-Za-z0-9]/.test(password)) {
+        newErrors.password = 'Deve conter pelo menos um caractere especial';
+      }
     }
 
     if (!isLogin) {
@@ -165,6 +182,22 @@ export const AuthForm: React.FC = () => {
               {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
             </button>
           </div>
+
+          {!isLogin && password && (
+            <div className="grid grid-cols-2 gap-1 text-xs">
+              {[
+                { ok: password.length >= 8 && password.length <= 16, label: '8–16 caracteres' },
+                { ok: /[A-Z]/.test(password), label: 'Letra maiúscula' },
+                { ok: /[a-z]/.test(password), label: 'Letra minúscula' },
+                { ok: /[0-9]/.test(password), label: 'Número' },
+                { ok: /[^A-Za-z0-9]/.test(password), label: 'Caractere especial' },
+              ].map((req) => (
+                <span key={req.label} className={`flex items-center gap-1 ${req.ok ? 'text-green-500' : 'text-content-secondary'}`}>
+                  <span>{req.ok ? '✓' : '○'}</span> {req.label}
+                </span>
+              ))}
+            </div>
+          )}
 
           {!isLogin && (
             <>
