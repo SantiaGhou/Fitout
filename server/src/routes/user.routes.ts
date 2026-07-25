@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { UserController } from '../user/controllers/user.controller';
 import { validateBody, validateQuery } from '../middlewares/validation';
 import { authenticateToken, requireUserType } from '../middlewares/auth';
-import { userProfileSchema, personalProfileSchema, updateUserSchema } from '../user/schemas/user.schemas';
+import { updateUserProfileSchema, personalProfileSchema, updateUserSchema } from '../user/schemas/user.schemas';
 import { z } from 'zod';
 
 const router = Router();
@@ -43,7 +43,7 @@ router.use(authenticateToken);
  */
 router.put('/profile/user',
   requireUserType('USER'),
-  validateBody(userProfileSchema),
+  validateBody(updateUserProfileSchema),
   UserController.updateUserProfile
 );
 

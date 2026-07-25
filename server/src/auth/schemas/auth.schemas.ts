@@ -1,5 +1,15 @@
 import { z } from 'zod';
 
+const capitalizeName = (v: unknown) => {
+  if (typeof v !== 'string') return v;
+  return v
+    .trim()
+    .split(' ')
+    .filter(Boolean)
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(' ');
+};
+
 const passwordSchema = z
   .string()
   .min(8, 'A senha deve ter no mínimo 8 caracteres')
@@ -10,7 +20,7 @@ const passwordSchema = z
   .regex(/[^A-Za-z0-9]/, 'A senha deve conter pelo menos um caractere especial');
 
 export const registerSchema = z.object({
-  name: z.string().min(1, 'Nome é obrigatório').optional(),
+  name: z.preprocess(capitalizeName, z.string().min(1, 'Nome é obrigatório').optional()),
   email: z
     .string()
     .email('E-mail inválido')

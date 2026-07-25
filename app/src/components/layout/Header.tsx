@@ -44,7 +44,7 @@ export const Header: React.FC<HeaderProps> = ({ currentPage, onNavigate }) => {
           </div>
 
           <div className="flex items-center space-x-3">
-                <span className="text-content-secondary text-sm">Bem vindo de volta,</span>
+                <span className="text-content-secondary text-sm">Olá,</span>
                 {user ? (
   <span className="text-content-primary font-medium">
     {user.name || user.email}
