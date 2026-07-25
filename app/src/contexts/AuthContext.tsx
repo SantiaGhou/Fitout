@@ -89,8 +89,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       // name vai para a tabela users (PUT /users/profile), não para user_profiles
       const { name, ...profileData } = profile as any;
 
+      let updatedName: string | undefined;
       if (name) {
-        await api.updateUser({ name });
+        const { data: userData } = await api.updateUser({ name }) as any;
+        updatedName = userData?.name ?? name;
       }
 
       // Backend agora aceita qualquer case e normaliza internamente
@@ -118,7 +120,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       const updatedUser: User = {
         ...user,
-        ...(name ? { name } : {}),
+        ...(updatedName ? { name: updatedName } : {}),
         profile: data,
       };
       setUser(updatedUser);
