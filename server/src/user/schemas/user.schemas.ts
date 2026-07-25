@@ -37,8 +37,19 @@ export const personalProfileSchema = z.object({
   experience: z.number().min(0).default(0),
 });
 
+// Capitaliza cada palavra: "joao silva" → "Joao Silva"
+const capitalizeName = (v: unknown) => {
+  if (typeof v !== 'string') return v;
+  return v
+    .trim()
+    .split(' ')
+    .filter(Boolean)
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(' ');
+};
+
 export const updateUserSchema = z.object({
-  name: z.string().optional(),
+  name: z.preprocess(capitalizeName, z.string().optional()),
   email: z.string().email().optional(),
 });
 
