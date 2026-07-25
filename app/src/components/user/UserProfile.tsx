@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Camera, Edit, Save, Award, TrendingUp, Calendar, User } from 'lucide-react';
 import { Card } from '../ui/Card';
 import { Button } from '../ui/Button';
@@ -15,6 +15,15 @@ export const UserProfile: React.FC = () => {
     height: profile?.height || 0,
   });
 
+  // Ressincroniza o form quando user muda (depois de salvar com sucesso)
+  useEffect(() => {
+    setEditData({
+      name: user?.name || '',
+      weight: (user?.profile as any)?.weight || 0,
+      height: (user?.profile as any)?.height || 0,
+    });
+  }, [user]);
+
   const calculateIMC = () => {
     if (profile?.height && profile?.weight) {
       const heightInMeters = profile.height / 100;
@@ -30,14 +39,15 @@ export const UserProfile: React.FC = () => {
     return { label: 'Obesidade', color: 'text-accent-red' };
   };
 
-  const handleSave = () => {
-    updateProfile({
-      ...profile,
+  const handleSave = async () => {
+    const success = await updateProfile({
+      name: editData.name,
       weight: editData.weight,
       height: editData.height,
     });
-    // Update user name would require a different method
-    setIsEditing(false);
+    if (success) {
+      setIsEditing(false);
+    }
   };
 
   const imc = parseFloat(calculateIMC());

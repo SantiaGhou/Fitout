@@ -1,9 +1,9 @@
 import prisma from '../../config/database';
 import { createError } from '../../middlewares/errorHandler';
-import { UserProfileInput, PersonalProfileInput, UpdateUserInput } from '../../user/schemas/user.schemas';
+import { UpdateUserProfileInput, PersonalProfileInput, UpdateUserInput } from '../../user/schemas/user.schemas';
 
 export class UserService {
-  static async updateUserProfile(userId: string, data: UserProfileInput) {
+  static async updateUserProfile(userId: string, data: UpdateUserProfileInput) {
 
     const user = await prisma.user.findUnique({
       where: { id: userId },
@@ -18,13 +18,17 @@ export class UserService {
       throw createError('Only regular users can have user profiles', 400);
     }
 
+    // Merge incoming partial data with existing profile so the upsert create
+    // always has all required fields populated
+    const existing = user.userProfile ?? {};
+    const merged = { ...existing, ...data };
 
     const profile = await prisma.userProfile.upsert({
       where: { userId },
       update: data,
       create: {
         userId,
-        ...data
+        ...(merged as any)
       }
     });
 

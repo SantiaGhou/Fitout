@@ -76,7 +76,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     localStorage.removeItem('token');
   };
 
-  const updateProfile = async (profile: Partial<UserProfile | PersonalProfile>): Promise<boolean> => {
+  const updateProfile = async (profile: Partial<UserProfile | PersonalProfile> & { name?: string }): Promise<boolean> => {
     if (!user) {
       console.error('[updateProfile] user é null, abortando');
       return false;
