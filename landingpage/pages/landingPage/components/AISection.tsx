@@ -16,7 +16,7 @@ export function AISection() {
       { threshold: 0.1 }
     );
 
-    const element = document.getElementById('ai-section');
+    const element = document.getElementById('nossa-ia');
     if (element) observer.observe(element);
 
     return () => observer.disconnect();
@@ -38,7 +38,7 @@ export function AISection() {
   ];
 
   return (
-    <section id="ai-section" className="py-20 bg-[#111012] relative overflow-hidden">
+    <section id="nossa-ia" className="py-20 bg-[#111012] relative overflow-hidden">
       <div className="container mx-auto px-6">
         <div className={`transform transition-all duration-1000 ${
           isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'

@@ -46,7 +46,7 @@ export function Testimonials() {
       { threshold: 0.1 }
     );
 
-    const element = document.getElementById('testimonials');
+    const element = document.getElementById('depoimentos');
     if (element) observer.observe(element);
 
     return () => observer.disconnect();
@@ -62,7 +62,7 @@ export function Testimonials() {
   }, [isVisible, testimonials.length]);
 
   return (
-    <section id="testimonials" className="py-20 bg-[#101010]">
+    <section id="depoimentos" className="py-20 bg-[#101010]">
       <div className="container mx-auto px-6">
         <div className={`transform transition-all duration-1000 ${
           isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'

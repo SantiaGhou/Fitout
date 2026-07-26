@@ -10,7 +10,7 @@ export function HowItWorks() {
       { threshold: 0.1 }
     );
 
-    const element = document.getElementById('how-it-works');
+    const element = document.getElementById('como-funciona');
     if (element) observer.observe(element);
 
     return () => observer.disconnect();
@@ -40,7 +40,7 @@ export function HowItWorks() {
   ];
 
   return (
-    <section id="how-it-works" className="py-20 bg-[#111012]">
+    <section id="como-funciona" className="py-20 bg-[#111012]">
       <div className="container mx-auto px-6">
         <div className={`transform transition-all duration-1000 ${
           isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'
