@@ -1,6 +1,8 @@
 import Image from "next/image";
 import Logo from "../../../public/assets/svg/Logo.svg";
 
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:5173";
+
 export function Header() {
   return (
     <header className="fixed top-0 inset-x-0 z-50 flex justify-between items-center p-10 text-white bg-gradient-to-b from-[#0F0F10] to-transparent">
@@ -44,9 +46,12 @@ export function Header() {
         </ul>
       </nav>
       <div>
-        <button className="px-4 py-2 rounded-md bg-[#F74D00] hover:bg-[#F74D00] transition-all duration-200 transform hover:scale-105 hover:shadow-lg hover:shadow-[#F74D00]/40">
+        <a
+          href={`${APP_URL}/login`}
+          className="px-4 py-2 rounded-md bg-[#F74D00] transition-all duration-200 transform hover:scale-105 hover:shadow-lg hover:shadow-[#F74D00]/40 inline-block"
+        >
           Entrar
-        </button>
+        </a>
       </div>
     </header>
   );

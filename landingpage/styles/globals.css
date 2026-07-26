@@ -4,6 +4,14 @@
   --font-plus-jakarta: 'Plus Jakarta Sans', sans-serif;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
+section[id] {
+  scroll-margin-top: 80px;
+}
+
 
 @keyframes scroll {
   0% {

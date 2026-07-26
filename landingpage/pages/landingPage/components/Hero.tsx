@@ -6,6 +6,8 @@ const plusJakarta = Plus_Jakarta_Sans({
   weight: ['400', '700'],
 })
 
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:5173";
+
 export function Hero() {
   return (
     <main
@@ -23,11 +25,12 @@ export function Hero() {
           <HeroSlider />
         </div>
 
-        <button
-          className=" mt-7 mb-7 px-4 py-2 rounded-md bg-[#F74D00] hover:bg-[#F74D00] transition-all duration-200 transform hover:scale-105 hover:shadow-lg hover:shadow-[#F74D00]/40"
+        <a
+          href={`${APP_URL}/login`}
+          className="mt-7 mb-7 px-4 py-2 rounded-md bg-[#F74D00] transition-all duration-200 transform hover:scale-105 hover:shadow-lg hover:shadow-[#F74D00]/40 inline-block"
         >
           Comece agora
-        </button>
+        </a>
       </div>
     </main>
   )
