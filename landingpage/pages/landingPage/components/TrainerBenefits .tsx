@@ -13,6 +13,8 @@ import {
   Star
 } from 'lucide-react';
 
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:5173";
+
 export const TrainerBenefits = () => {
   const benefitCategories = [
     {
@@ -208,18 +210,18 @@ export const TrainerBenefits = () => {
               Junte-se aos profissionais que já descobriram o futuro do personal training
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <button
-                type="button"
-                className="bg-white text-black hover:bg-gray-300 px-8 py-3 rounded-lg font-semibold transition-all"
+              <a
+                href={`${APP_URL}/login`}
+                className="bg-white text-black hover:bg-gray-300 px-8 py-3 rounded-lg font-semibold transition-all inline-block"
               >
                 Começar Teste Gratuito
-              </button>
-              <button
-                type="button"
-                className="border border-white text-white hover:bg-white hover:text-black px-8 py-3 rounded-lg font-semibold transition-all"
+              </a>
+              <a
+                href={`${APP_URL}/login`}
+                className="border border-white text-white hover:bg-white hover:text-black px-8 py-3 rounded-lg font-semibold transition-all inline-block"
               >
                 Agendar Demonstração
-              </button>
+              </a>
             </div>
           </div>
         </div>
