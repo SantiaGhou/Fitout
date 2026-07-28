@@ -3,6 +3,7 @@ import { ArrowLeft, Plus, Edit, Trash2, Save } from 'lucide-react';
 import { Card } from '../ui/Card';
 import { Button } from '../ui/Button';
 import { Input } from '../ui/Input';
+import { useModal } from '../../contexts/ModalContext';
 
 interface Exercise {
   id: string;
@@ -31,6 +32,7 @@ export const CreateWorkout: React.FC<CreateWorkoutProps> = ({
   studentName, 
   onBack 
 }) => {
+  const { showModal } = useModal();
   const [workoutName, setWorkoutName] = useState('');
   const [exercises, setExercises] = useState<Exercise[]>([]);
   const [editingExercise, setEditingExercise] = useState<Exercise | null>(null);
@@ -105,7 +107,7 @@ export const CreateWorkout: React.FC<CreateWorkoutProps> = ({
     if (workoutName && exercises.length > 0) {
       // Here you would save to API
       console.log('Saving workout:', { name: workoutName, exercises, studentId });
-      alert('Treino salvo com sucesso!');
+      showModal({ type: 'success', message: 'Treino salvo com sucesso!' });
       setWorkoutName('');
       setExercises([]);
     }

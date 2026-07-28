@@ -3,6 +3,7 @@ import { ArrowLeft, Calendar, Clock, Save, Edit, Trash2 } from 'lucide-react';
 import { Card } from '../ui/Card';
 import { Button } from '../ui/Button';
 import { Input } from '../ui/Input';
+import { useModal } from '../../contexts/ModalContext';
 
 interface Session {
   id: string;
@@ -23,6 +24,7 @@ export const ScheduleSession: React.FC<ScheduleSessionProps> = ({
   studentName,
   onBack
 }) => {
+  const { showModal } = useModal();
   const [date, setDate] = useState('');
   const [time, setTime] = useState('');
   const [notes, setNotes] = useState('');
@@ -56,7 +58,7 @@ export const ScheduleSession: React.FC<ScheduleSessionProps> = ({
     if (date && time) {
       // Here you would save to API
       console.log('Scheduling session:', { date, time, notes, studentId });
-      alert('Sessão agendada com sucesso!');
+      showModal({ type: 'success', message: 'Sessão agendada com sucesso!' });
       setDate('');
       setTime('');
       setNotes('');
