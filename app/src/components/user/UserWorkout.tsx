@@ -4,6 +4,7 @@ import { Card } from '../ui/Card';
 import { Button } from '../ui/Button';
 import { Input } from '../ui/Input';
 import { useAuth } from '../../contexts/AuthContext';
+import { useModal } from '../../contexts/ModalContext';
 
 interface Exercise {
   id: string;
@@ -24,6 +25,7 @@ interface Workout {
 
 export const UserWorkout: React.FC = () => {
   const { user } = useAuth();
+  const { showModal } = useModal();
   const profile = user?.profile as any;
   const hasTrainer = profile?.hasTrainer;
 
@@ -85,7 +87,7 @@ export const UserWorkout: React.FC = () => {
   const handleSaveWorkout = () => {
     if (workoutName && exercises.length > 0) {
       console.log('Saving workout:', { name: workoutName, exercises });
-      alert('Treino salvo com sucesso!');
+      showModal({ type: 'success', message: 'Treino salvo com sucesso!' });
       setWorkoutName('');
       setExercises([]);
       setShowForm(false);
@@ -94,7 +96,7 @@ export const UserWorkout: React.FC = () => {
 
   const handleCompleteWorkout = (workoutId: string) => {
     console.log('Completing workout:', workoutId);
-    alert('Treino marcado como concluído!');
+    showModal({ type: 'success', message: 'Treino marcado como concluído!' });
   };
 
   return (

@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, useLocation, useNavigate } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
+import { ModalProvider } from './contexts/ModalContext';
 import { AppRoutes } from '../src/routes/AppRoutes';
 import { Layout } from './components/layout/Layout';
 
@@ -31,9 +32,11 @@ function AppContent() {
 function App() {
   return (
     <AuthProvider>
-      <Router>
-        <AppContent />
-      </Router>
+      <ModalProvider>
+        <Router>
+          <AppContent />
+        </Router>
+      </ModalProvider>
     </AuthProvider>
   );
 }
